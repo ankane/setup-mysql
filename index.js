@@ -5,15 +5,22 @@ function run(command) {
   execSync(command, {stdio: 'inherit'});
 }
 
-const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || 8);
+const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || 8).toFixed(1);
 
-if (![8].includes(mysqlVersion)) {
-  throw 'Invalid MySQL version: ' + mysqlVersion;
+if (!["8.0", "5.7", "5.6"].includes(mysqlVersion)) {
+  throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
 if (process.platform == 'darwin') {
-  run('brew install mysql');
-  run('mysql.server start');
+  // install
+  run(`brew install mysql@${mysqlVersion}`);
+
+  // start
+  const bin = `/usr/local/opt/mysql@${mysqlVersion}/bin`;
+  run(`${bin}/mysql.server start`);
+
+  // set path
+  run(`echo "${bin}" >> $GITHUB_PATH`);
 } else {
   run('sudo service mysql start');
   run(`sudo mysqladmin -proot password ''`);

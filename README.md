@@ -5,6 +5,7 @@ The missing action for MySQL - no need to use containers :tada:
 Supports:
 
 - Linux and Mac (`ubuntu-20.04`, `ubuntu-18.04`, `ubuntu-16.04`, and `macos-10.15`)
+- Different versions (`8.0`, `5.7`, and `5.6`)
 
 [![Build Status](https://github.com/ankane/setup-mysql/workflows/build/badge.svg?branch=v1)](https://github.com/ankane/setup-mysql/actions)
 
@@ -27,17 +28,17 @@ jobs:
     steps:
     - uses: ankane/setup-mysql@v1
       with:
-        mysql-version: 8
+        mysql-version: 8.0
 ```
 
-Test against multiple versions [todo]
+Test against multiple versions
 
 ```yml
 jobs:
   build:
     strategy:
       matrix:
-        mysql-version: [8]
+        mysql-version: [8.0, 5.7, 5.6]
     steps:
     - uses: ankane/setup-mysql@v1
       with:
