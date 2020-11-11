@@ -12,11 +12,8 @@ if (![8].includes(mysqlVersion)) {
 }
 
 if (process.platform == 'darwin') {
-  const bin = '/usr/local/opt/mysql/bin';
-  if (mysqlVersion != 8) {
-    run('brew install mysql@' + mysqlVersion);
-  }
-  run(bin + '/mysql.server start');
+  run('brew install mysql');
+  run('mysql.server start');
 } else {
   run('sudo service mysql start');
   run(`sudo mysqladmin -proot password ''`);
