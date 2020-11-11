@@ -26,7 +26,8 @@ if (process.platform == 'darwin') {
     // install
     run(`wget https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
     run(`sudo dpkg -i mysql-apt-config_0.8.16-1_all.deb`);
-    run(`sudo apt-get install mysql-server-${mysqlVersion}`);
+    run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion} | sudo debconf-set-selections`);
+    run(`sudo apt-get install mysql-server`);
   }
 
   // start
