@@ -47,6 +47,7 @@ jobs:
 ## Related Actions
 
 - [setup-postgres](https://github.com/ankane/setup-postgres)
+- [setup-mongodb](https://github.com/ankane/setup-mongodb)
 
 ## Contributing
 
