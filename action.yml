@@ -1,0 +1,7 @@
+name: Setup MySQL
+inputs:
+  mysql-version:
+    description: The MySQL version to download (if necessary) and use
+runs:
+  using: node12
+  main: index.js
