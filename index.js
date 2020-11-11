@@ -29,7 +29,7 @@ if (process.platform == 'darwin') {
   }
 
   // start
-  run('sudo service mysql start');
+  run('sudo systemctl start mysql');
 
   // remove root password
   run(`sudo mysqladmin -proot password ''`);
