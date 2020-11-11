@@ -40,6 +40,8 @@ Test against multiple versions
         mysql-version: ${{ matrix.mysql-version }}
 ```
 
+## Extra Steps
+
 Create a database
 
 ```yml
