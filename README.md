@@ -28,11 +28,12 @@ Specify a version (defaults to the latest)
 
 Currently supports
 
-Version | `ubuntu-20.04` | `ubuntu-18.04` | `ubuntu-16.04` | `macos-10.15`
---- | --- | --- | --- | ---
-`8.0` | ✓ | | | ✓
-`5.7` | | ✓ | ✓ | ✓
-`5.6` | | | | ✓
+Version | `8.0` | `5.7` | `5.6`
+--- | --- | --- | ---
+`ubuntu-20.04` | ✓ | |
+`ubuntu-18.04` | | ✓ |
+`ubuntu-16.04` | | ✓ |
+`macos-10.15` | ✓ | ✓ | ✓
 
 Test against multiple versions
 
