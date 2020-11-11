@@ -27,3 +27,4 @@ jobs:
     - run: |
         mysqladmin create testdb
         mysql -D testdb -e 'SELECT VERSION()'
+    - run: mysql --version
