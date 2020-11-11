@@ -7,6 +7,7 @@ function run(command) {
 
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || '8.0').toFixed(1);
 
+// TODO make OS-specific
 if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
