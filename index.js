@@ -25,7 +25,7 @@ if (process.platform == 'darwin') {
   if (mysqlVersion != '8.0') {
     // remove previous version
     run(`sudo apt-get purge mysql*`);
-    run(`sudo rm -r /var/log/mysql /var/lib/mysql`);
+    run(`sudo rm -r /var/lib/mysql`);
 
     // install new version
     run(`wget -q https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
