@@ -12,7 +12,7 @@ if (![8].includes(mysqlVersion)) {
 }
 
 if (process.platform == 'darwin') {
-  const bin = '/usr/local/opt/mysql@' + mysqlVersion + '/bin';
+  const bin = '/usr/local/opt/mysql/bin';
   if (mysqlVersion != 8) {
     run('brew install mysql@' + mysqlVersion);
   }
