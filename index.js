@@ -23,11 +23,7 @@ if (process.platform == 'darwin') {
   run(`echo "${bin}" >> $GITHUB_PATH`);
 } else {
   if (mysqlVersion != '8.0') {
-    // remove previous version
-    run(`sudo apt-get purge mysql*`);
-    run(`sudo rm -r /var/lib/mysql`);
-
-    // install new version
+    // install
     run(`sudo apt-get install mysql-server-${mysqlVersion}`);
   }
 
