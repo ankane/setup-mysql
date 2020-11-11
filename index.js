@@ -20,7 +20,7 @@ if (process.platform == 'darwin') {
 } else {
   run('sudo service mysql start');
   run(`sudo mysqladmin -proot password ''`);
-  run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''`);
-  run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'`);
+  run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
+  run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
   run(`sudo mysql -e "FLUSH PRIVILEGES"`);
 }
