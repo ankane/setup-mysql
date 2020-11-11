@@ -1,14 +1,10 @@
 # setup-mysql
 
-The missing action for MySQL - no need for containers :tada:
+The missing action for MySQL :tada:
 
-Supports Linux and Mac, and a few versions
-
-Version | `ubuntu-20.04` | `ubuntu-18.04` | `ubuntu-16.04` | `macos-10.15`
---- | --- | --- | --- | ---
-`8.0` | ✓ | ✓ | ✓ | ✓
-`5.7` | | ✓ | ✓ | ✓
-`5.6` | | | | ✓
+- Faster and simpler than containers
+- Works on Linux and Mac
+- Supports different versions
 
 [![Build Status](https://github.com/ankane/setup-mysql/workflows/build/badge.svg?branch=v1)](https://github.com/ankane/setup-mysql/actions)
 
@@ -29,6 +25,14 @@ Specify a version (defaults to the latest)
       with:
         mysql-version: 8.0
 ```
+
+Currently supports
+
+Version | `ubuntu-20.04` | `ubuntu-18.04` | `ubuntu-16.04` | `macos-10.15`
+--- | --- | --- | --- | ---
+`8.0` | ✓ | ✓ | ✓ | ✓
+`5.7` | | ✓ | ✓ | ✓
+`5.6` | | | | ✓
 
 Test against multiple versions
 
