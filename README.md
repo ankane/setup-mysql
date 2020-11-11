@@ -46,6 +46,7 @@ jobs:
 
 ## Related Actions
 
+- [setup-mariadb](https://github.com/ankane/setup-mariadb)
 - [setup-postgres](https://github.com/ankane/setup-postgres)
 - [setup-mongodb](https://github.com/ankane/setup-mongodb)
 
