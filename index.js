@@ -28,6 +28,7 @@ if (process.platform == 'darwin') {
     run(`echo mysql-apt-config mysql-apt-config/enable-repo select mysql-${mysqlVersion} | sudo debconf-set-selections`);
     run(`sudo apt install ./mysql-apt-config_0.8.16-1_all.deb`);
     // run(`sudo dpkg --configure -a`);
+    run(`cat /etc/apt/sources.list.d/mysql.list`);
     run(`sudo apt-get install mysql-server-${mysqlVersion}`);
   }
 
