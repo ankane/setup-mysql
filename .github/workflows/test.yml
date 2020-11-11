@@ -15,4 +15,4 @@ jobs:
         mysql-version: ${{ matrix.mysql-version }}
     - run: |
         mysqladmin create setup_mysql_test
-        mysql -D setup_mysql_test -e 'SELECT 1 AS hello'
+        mysql -D setup_mysql_test -e 'SELECT VERSION()'
