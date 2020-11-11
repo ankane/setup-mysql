@@ -23,11 +23,15 @@ if (process.platform == 'darwin') {
   run(`echo "${bin}" >> $GITHUB_PATH`);
 } else {
   if (mysqlVersion != '8.0') {
-    // install
+    // remove previous version
+    run(`sudo apt-get purge mysql*`);
+    run(`sudo rm -r /var/log/mysql /var/lib/mysql`);
+
+    // install new version
     run(`wget -q https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
-    run(`sudo apt install ./mysql-apt-config_0.8.16-1_all.deb`);
     run(`echo mysql-apt-config mysql-apt-config/enable-repo select mysql-${mysqlVersion} | sudo debconf-set-selections`);
-    // run(`sudo dpkg --configure -a`);
+    run(`sudo apt install ./mysql-apt-config_0.8.16-1_all.deb`);
+    run(`cat /etc/apt/sources.list.d/mysql.list`);
     run(`sudo dpkg-reconfigure mysql-apt-config`);
     run(`cat /etc/apt/sources.list.d/mysql.list`);
     run(`sudo apt-get install mysql-server-${mysqlVersion}`);
