@@ -25,5 +25,5 @@ jobs:
       with:
         mysql-version: ${{ matrix.mysql-version }}
     - run: |
-        mysqladmin create setup_mysql_test
-        mysql -D setup_mysql_test -e 'SELECT VERSION()'
+        mysqladmin create testdb
+        mysql -D testdb -e 'SELECT VERSION()'

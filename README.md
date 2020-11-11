@@ -17,18 +17,12 @@ Version | `ubuntu-20.04` | `ubuntu-18.04` | `ubuntu-16.04` | `macos-10.15`
 Add it as a step to your workflow
 
 ```yml
-jobs:
-  build:
-    steps:
     - uses: ankane/setup-mysql@v1
 ```
 
 Specify a version (defaults to the latest if no version is specified)
 
 ```yml
-jobs:
-  build:
-    steps:
     - uses: ankane/setup-mysql@v1
       with:
         mysql-version: 8.0
@@ -37,8 +31,6 @@ jobs:
 Test against multiple versions
 
 ```yml
-jobs:
-  build:
     strategy:
       matrix:
         mysql-version: [8.0, 5.7, 5.6]
@@ -46,6 +38,18 @@ jobs:
     - uses: ankane/setup-mysql@v1
       with:
         mysql-version: ${{ matrix.mysql-version }}
+```
+
+Create a database
+
+```yml
+    - run: mysqladmin create testdb
+```
+
+Run queries
+
+```yml
+    - run: mysql -D testdb -e 'SELECT VERSION()'
 ```
 
 ## Related Actions
