@@ -29,10 +29,8 @@ if (process.platform == 'darwin') {
 
     // install new version
     run(`wget -q https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
-    run(`echo mysql-apt-config mysql-apt-config/enable-repo select mysql-${mysqlVersion} | sudo debconf-set-selections`);
-    run(`sudo apt install ./mysql-apt-config_0.8.16-1_all.deb`);
-    run(`cat /etc/apt/sources.list.d/mysql.list`);
-    run(`sudo dpkg-reconfigure mysql-apt-config`);
+    run(`echo mysql-apt-config mysql-apt-config/select-server mysql-${mysqlVersion} | sudo debconf-set-selections`);
+    run(`sudo dpkg -i mysql-apt-config_0.8.16-1_all.deb`);
     run(`cat /etc/apt/sources.list.d/mysql.list`);
     run(`sudo apt-get install mysql-server-${mysqlVersion}`);
   }
