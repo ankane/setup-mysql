@@ -31,8 +31,8 @@ Currently supports
 Version | `8.0` | `5.7` | `5.6`
 --- | --- | --- | ---
 `ubuntu-20.04` | ✓ | |
-`ubuntu-18.04` | | ✓ |
-`ubuntu-16.04` | | ✓ |
+`ubuntu-18.04` | todo | ✓ |
+`ubuntu-16.04` | todo | ✓ |
 `macos-10.15` | ✓ | ✓ | ✓
 
 Test against multiple versions
