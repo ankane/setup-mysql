@@ -3,7 +3,7 @@
 The missing action for MySQL :tada:
 
 - Faster and simpler than containers
-- Works on Linux and Mac
+- Works on Linux, Mac, and Windows
 - Supports different versions
 
 [![Build Status](https://github.com/ankane/setup-mysql/workflows/build/badge.svg?branch=v1)](https://github.com/ankane/setup-mysql/actions)
@@ -34,6 +34,7 @@ Version | `8.0` | `5.7` | `5.6`
 `ubuntu-18.04` | todo | ✓ |
 `ubuntu-16.04` | todo | ✓ |
 `macos-10.15` | ✓ | ✓ | ✓
+`windows-2019` | | ✓ |
 
 Test against multiple versions
 

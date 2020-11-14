@@ -1,11 +1,17 @@
 const execSync = require("child_process").execSync;
+const fs = require('fs');
 
 function run(command) {
   console.log(command);
   execSync(command, {stdio: 'inherit'});
 }
 
-const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || '8.0').toFixed(1);
+function addToPath(newPath) {
+  fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
+}
+
+const defaultVersion = process.platform == 'win32' ? '5.7' : '8.0';
+const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
 if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
@@ -22,6 +28,37 @@ if (process.platform == 'darwin') {
 
   // set path
   run(`echo "${bin}" >> $GITHUB_PATH`);
+} else if (process.platform == 'win32') {
+  if (mysqlVersion != '5.7') {
+    throw `MySQL version not supported for Windows: ${mysqlVersion}`;
+  }
+
+  // install
+  const versionMap = {
+    '8.0': '8.0.22',
+    '5.7': '5.7.32',
+    '5.6': '5.6.50'
+  };
+  const fullVersion = versionMap[mysqlVersion];
+  run(`curl -Ls -o mysql.msi https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-${versionMap['8.0']}.0.msi`)
+  run(`msiexec /i mysql.msi /qn`);
+  run(`"C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySQLInstallerConsole" community install server;${fullVersion};x64 -silent`);
+
+  // start
+  // TODO for 8.0: create my.ini with [mysqld] default_authentication_plugin=mysql_native_password and set service to use it
+  const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
+  run(`"${bin}\\mysqld" --initialize-insecure`);
+  run(`"${bin}\\mysqld" --install`);
+  run(`net start MySQL`);
+
+  addToPath(bin);
+
+  run(`mysql -u root -e "SELECT VERSION()"`);
+
+  // add user
+  run(`mysql -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
+  run(`mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
+  run(`mysql -u root -e "FLUSH PRIVILEGES"`);
 } else {
   if (mysqlVersion != '8.0') {
     // install
