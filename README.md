@@ -33,8 +33,10 @@ Version | `8.0` | `5.7` | `5.6`
 `ubuntu-20.04` | default | |
 `ubuntu-18.04` | ✓ | default |
 `ubuntu-16.04` | ✓ | default |
+`macos-11.0` | default | |
 `macos-10.15` | default | ✓ | ✓
 `windows-2019` | | default |
+`windows-2016` | | default |
 
 Test against multiple versions
 
