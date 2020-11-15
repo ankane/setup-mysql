@@ -18,6 +18,8 @@ jobs:
             mysql-version: 8.0
           - os: ubuntu-16.04
             mysql-version: 5.7
+          - os: macos-11.0
+            mysql-version: 8.0
           - os: macos-10.15
             mysql-version: 8.0
           - os: macos-10.15
@@ -25,6 +27,8 @@ jobs:
           - os: macos-10.15
             mysql-version: 5.6
           - os: windows-2019
+            mysql-version: 5.7
+          - os: windows-2016
             mysql-version: 5.7
     steps:
     - uses: ankane/setup-mysql@v1
