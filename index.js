@@ -10,7 +10,8 @@ function addToPath(newPath) {
   fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
 }
 
-const defaultVersion = process.platform == 'win32' ? '5.7' : '8.0';
+const image = process.env['ImageOS'];
+const defaultVersion = (process.platform == 'win32' || image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
@@ -60,9 +61,24 @@ if (process.platform == 'darwin') {
   run(`mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`mysql -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (mysqlVersion != '8.0') {
-    // install
-    run(`sudo apt-get install mysql-server-${mysqlVersion}`);
+  if (image == 'ubuntu20') {
+    if (mysqlVersion != '8.0') {
+      // install
+      run(`sudo apt-get install mysql-server-${mysqlVersion}`);
+    }
+  } else {
+    if (mysqlVersion != '5.7') {
+      if (mysqlVersion == '5.6') {
+        throw `MySQL version not supported yet: ${mysqlVersion}`;
+      }
+
+      // install
+      run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
+      run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion} | sudo debconf-set-selections`);
+      run(`sudo dpkg -i mysql-apt-config.deb`);
+      run(`sudo apt-get update`);
+      run(`sudo apt-get install mysql-server`);
+    }
   }
 
   // start

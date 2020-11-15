@@ -18,7 +18,7 @@ Add it as a step to your workflow
 
 ## Versions
 
-Specify a version (defaults to the latest)
+Specify a version
 
 ```yml
     - uses: ankane/setup-mysql@v1
@@ -30,11 +30,11 @@ Currently supports
 
 Version | `8.0` | `5.7` | `5.6`
 --- | --- | --- | ---
-`ubuntu-20.04` | ✓ | |
-`ubuntu-18.04` | todo | ✓ |
-`ubuntu-16.04` | todo | ✓ |
-`macos-10.15` | ✓ | ✓ | ✓
-`windows-2019` | | ✓ |
+`ubuntu-20.04` | default | |
+`ubuntu-18.04` | ✓ | default |
+`ubuntu-16.04` | ✓ | default |
+`macos-10.15` | default | ✓ | ✓
+`windows-2019` | | default |
 
 Test against multiple versions
 
