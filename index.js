@@ -38,10 +38,6 @@ if (process.platform == 'darwin') {
   // set path
   run(`echo "${bin}" >> $GITHUB_PATH`);
 } else if (process.platform == 'win32') {
-  if (mysqlVersion == '5.6') {
-    throw `MySQL version not supported for Windows: ${mysqlVersion}`;
-  }
-
   // install
   const versionMap = {
     '8.0': '8.0.22',
@@ -57,7 +53,9 @@ if (process.platform == 'darwin') {
 
   // start
   const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
-  run(`"${bin}\\mysqld" --initialize-insecure`);
+  if (mysqlVersion != '5.6') {
+    run(`"${bin}\\mysqld" --initialize-insecure`);
+  }
   run(`"${bin}\\mysqld" --install`);
   run(`net start MySQL`);
 
