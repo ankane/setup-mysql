@@ -1,5 +1,8 @@
 const execSync = require("child_process").execSync;
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const process = require('process');
 
 function run(command) {
   console.log(command);
@@ -17,6 +20,11 @@ const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVer
 // TODO make OS-specific
 if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
+}
+
+function useTmpDir() {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mysql-'));
+  process.chdir(tmpDir);
 }
 
 if (process.platform == 'darwin') {
@@ -41,6 +49,7 @@ if (process.platform == 'darwin') {
     '5.6': '5.6.50'
   };
   const fullVersion = versionMap[mysqlVersion];
+  useTmpDir();
   run(`curl -Ls -o mysql.msi https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-${versionMap['8.0']}.0.msi`)
   run(`msiexec /i mysql.msi /qn`);
   run(`"C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySQLInstallerConsole" community install server;${fullVersion};x64 -silent`);
@@ -73,6 +82,7 @@ if (process.platform == 'darwin') {
       }
 
       // install
+      useTmpDir();
       run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
       run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion} | sudo debconf-set-selections`);
       run(`sudo dpkg -i mysql-apt-config.deb`);
