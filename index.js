@@ -14,7 +14,7 @@ function addToPath(newPath) {
 }
 
 const image = process.env['ImageOS'];
-const defaultVersion = (process.platform == 'win32' || image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8.0';
+const defaultVersion = (image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
