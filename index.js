@@ -50,9 +50,11 @@ if (process.platform == 'darwin') {
   };
   const fullVersion = versionMap[mysqlVersion];
   useTmpDir();
-  run(`curl -Ls -o mysql.msi https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-${versionMap['8.0']}.0.msi`)
-  run(`msiexec /i mysql.msi /qn`);
-  run(`"C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySQLInstallerConsole" community install server;${fullVersion};x64 -silent`);
+  run(`curl -Ls -o mysql.zip https://downloads.mysql.com/archives/get/p/23/file/mysql-${fullVersion}-winx64.zip`)
+  run(`unzip mysql.zip`);
+  run(`ls`);
+  fs.mkdirSync(`C:\\Program Files\\MySQL`);
+  fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
   // start
   // TODO for 8.0: create my.ini with [mysqld] default_authentication_plugin=mysql_native_password and set service to use it
