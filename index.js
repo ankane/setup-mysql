@@ -54,7 +54,7 @@ if (process.platform == 'darwin') {
   // start
   const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
   if (mysqlVersion == '5.6') {
-    run(`"${bin}\\mysqld" --initialize`);
+    run(`"${bin}\\mysql_install_db"`);
   } else {
     run(`"${bin}\\mysqld" --initialize-insecure`);
   }
