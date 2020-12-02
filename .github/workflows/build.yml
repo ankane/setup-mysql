@@ -41,3 +41,4 @@ jobs:
     - run: mysql --version
     - run: mysqladmin create testdb
     - run: mysql -D testdb -e 'SELECT VERSION()'
+    - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
