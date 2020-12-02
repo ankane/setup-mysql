@@ -10,6 +10,8 @@ jobs:
         include:
           - os: windows-2019
             mysql-version: 5.7
+          - os: windows-2016
+            mysql-version: 5.7
     steps:
     - uses: ankane/setup-mysql@windows2
       with:
