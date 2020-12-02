@@ -60,12 +60,12 @@ if (process.platform == 'darwin') {
 
   addToPath(bin);
 
-  run(`mysql -u root -e "SELECT VERSION()"`);
+  run(`"${bin}\\mysql" -u root -e "SELECT VERSION()"`);
 
   // add user
-  run(`mysql -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
-  run(`mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
-  run(`mysql -u root -e "FLUSH PRIVILEGES"`);
+  run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
+  run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
+  run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
   if (image == 'ubuntu20') {
     if (mysqlVersion != '8.0') {
