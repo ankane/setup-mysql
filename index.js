@@ -38,10 +38,6 @@ if (process.platform == 'darwin') {
   // set path
   run(`echo "${bin}" >> $GITHUB_PATH`);
 } else if (process.platform == 'win32') {
-  if (mysqlVersion != '5.7') {
-    throw `MySQL version not supported for Windows: ${mysqlVersion}`;
-  }
-
   // install
   const versionMap = {
     '8.0': '8.0.22',
