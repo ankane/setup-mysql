@@ -52,7 +52,6 @@ if (process.platform == 'darwin') {
   fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
   // start
-  // TODO for 8.0: create my.ini with [mysqld] default_authentication_plugin=mysql_native_password and set service to use it
   const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
   run(`"${bin}\\mysqld" --initialize-insecure`);
   run(`"${bin}\\mysqld" --install`);
