@@ -38,7 +38,7 @@ if (process.platform == 'darwin') {
   // set path
   run(`echo "${bin}" >> $GITHUB_PATH`);
 } else if (process.platform == 'win32') {
-  if (mysqlVersion != '5.7') {
+  if (mysqlVersion == '5.6') {
     throw `MySQL version not supported for Windows: ${mysqlVersion}`;
   }
 
@@ -50,12 +50,12 @@ if (process.platform == 'darwin') {
   };
   const fullVersion = versionMap[mysqlVersion];
   useTmpDir();
-  run(`curl -Ls -o mysql.msi https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-${versionMap['8.0']}.0.msi`)
-  run(`msiexec /i mysql.msi /qn`);
-  run(`"C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySQLInstallerConsole" community install server;${fullVersion};x64 -silent`);
+  run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
+  run(`unzip -q mysql.zip`);
+  fs.mkdirSync(`C:\\Program Files\\MySQL`);
+  fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
   // start
-  // TODO for 8.0: create my.ini with [mysqld] default_authentication_plugin=mysql_native_password and set service to use it
   const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
   run(`"${bin}\\mysqld" --initialize-insecure`);
   run(`"${bin}\\mysqld" --install`);
@@ -63,12 +63,12 @@ if (process.platform == 'darwin') {
 
   addToPath(bin);
 
-  run(`mysql -u root -e "SELECT VERSION()"`);
+  run(`"${bin}\\mysql" -u root -e "SELECT VERSION()"`);
 
   // add user
-  run(`mysql -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
-  run(`mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
-  run(`mysql -u root -e "FLUSH PRIVILEGES"`);
+  run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
+  run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
+  run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
   if (image == 'ubuntu20') {
     if (mysqlVersion != '8.0') {
