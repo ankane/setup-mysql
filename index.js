@@ -51,8 +51,7 @@ if (process.platform == 'darwin') {
   const fullVersion = versionMap[mysqlVersion];
   useTmpDir();
   run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
-  run(`unzip mysql.zip`);
-  run(`ls`);
+  run(`unzip -q mysql.zip`);
   fs.mkdirSync(`C:\\Program Files\\MySQL`);
   fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
