@@ -70,6 +70,7 @@ Run queries
 - [setup-postgres](https://github.com/ankane/setup-postgres)
 - [setup-mongodb](https://github.com/ankane/setup-mongodb)
 - [setup-elasticsearch](https://github.com/ankane/setup-elasticsearch)
+- [setup-sqlserver](https://github.com/ankane/setup-sqlserver)
 
 ## Contributing
 
