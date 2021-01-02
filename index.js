@@ -36,7 +36,7 @@ if (process.platform == 'darwin') {
   run(`${bin}/mysql.server start`);
 
   // set path
-  run(`echo "${bin}" >> $GITHUB_PATH`);
+  addToPath(bin);
 } else if (process.platform == 'win32') {
   // install
   const versionMap = {
