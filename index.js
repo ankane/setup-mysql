@@ -35,6 +35,11 @@ if (process.platform == 'darwin') {
   const bin = `/usr/local/opt/mysql@${mysqlVersion}/bin`;
   run(`${bin}/mysql.server start`);
 
+  // add user
+  run(`${bin}/mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
+  run(`${bin}/mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
+  run(`${bin}/mysql -e "FLUSH PRIVILEGES"`);
+
   // set path
   addToPath(bin);
 } else if (process.platform == 'win32') {
