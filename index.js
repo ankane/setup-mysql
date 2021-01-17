@@ -6,7 +6,9 @@ const process = require('process');
 
 function run(command) {
   console.log(command);
-  execSync(command, {stdio: 'inherit'});
+  let env = Object.assign({}, process.env);
+  delete env.CI; // for Homebrew on macos-11.0
+  execSync(command, {stdio: 'inherit', env: env});
 }
 
 function addToPath(newPath) {
