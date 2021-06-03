@@ -50,13 +50,17 @@ Test against multiple versions
         mysql-version: ${{ matrix.mysql-version }}
 ```
 
-## Extra Steps
+## Options
 
 Create a database
 
 ```yml
-    - run: mysqladmin create testdb
+    - uses: ankane/setup-mysql@v1
+      with:
+        database: testdb
 ```
+
+## Extra Steps
 
 Run queries
 

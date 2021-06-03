@@ -47,10 +47,11 @@ jobs:
     - uses: ./.
       with:
         mysql-version: ${{ matrix.mysql-version }}
+        database: testdb
     - run: mysql --version
     - run: mysql -e 'SELECT VERSION()'
     - run: mysql -e 'SELECT CURRENT_USER()'
     - run: mysql -e 'SELECT DATABASE()'
     - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
-    - run: mysqladmin create testdb
+    - run: mysqladmin create testdb2
     - run: mysql -D testdb -e 'SELECT DATABASE()'

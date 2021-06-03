@@ -3,12 +3,24 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const process = require('process');
+const spawnSync = require('child_process').spawnSync;
 
 function run(command) {
   console.log(command);
   let env = Object.assign({}, process.env);
   delete env.CI; // for Homebrew on macos-11.0
   execSync(command, {stdio: 'inherit', env: env});
+}
+
+function runSafe() {
+  const args = Array.from(arguments);
+  console.log(args.join(' '));
+  const command = args.shift();
+  // spawn is safer and more lightweight than exec
+  const ret = spawnSync(command, args, {stdio: 'inherit'});
+  if (ret.status !== 0) {
+    throw ret.error;
+  }
 }
 
 function addToPath(newPath) {
@@ -24,6 +36,10 @@ if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
+const database = process.env['INPUT_DATABASE'];
+
+let bin;
+
 function useTmpDir() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mysql-'));
   process.chdir(tmpDir);
@@ -34,7 +50,7 @@ if (process.platform == 'darwin') {
   run(`brew install mysql@${mysqlVersion}`);
 
   // start
-  const bin = `/usr/local/opt/mysql@${mysqlVersion}/bin`;
+  bin = `/usr/local/opt/mysql@${mysqlVersion}/bin`;
   run(`${bin}/mysql.server start`);
 
   // add user
@@ -59,7 +75,7 @@ if (process.platform == 'darwin') {
   fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
   // start
-  const bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
+  bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
   if (mysqlVersion != '5.6') {
     run(`"${bin}\\mysqld" --initialize-insecure`);
   }
@@ -107,4 +123,10 @@ if (process.platform == 'darwin') {
   run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
   run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
   run(`sudo mysql -e "FLUSH PRIVILEGES"`);
+
+  bin = `/usr/bin`;
+}
+
+if (database) {
+  runSafe(path.join(bin, 'mysqladmin'), 'create', database);
 }
