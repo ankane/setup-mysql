@@ -1,4 +1,5 @@
 name: Setup MySQL
+description: install and start the mysql server
 inputs:
   mysql-version:
     description: The MySQL version to download (if necessary) and use

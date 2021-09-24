@@ -74,6 +74,7 @@ function installMac() {
   }
   // set path
   addToPath(bin);
+  return bin;
 }
 
 function installWindwos() {
@@ -84,6 +85,7 @@ function installWindwos() {
     '5.6': '5.6.50'
   };
   installDir = "C:\\Program Files\\MySQL";
+  bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
   if (! fs.existsSync(installDir)) {
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
@@ -93,14 +95,16 @@ function installWindwos() {
     fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
 
     // start
-    bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
     if (mysqlVersion != '5.6') {
       run(`"${bin}\\mysqld" --initialize-insecure`);
     }
     run(`"${bin}\\mysqld" --install`);
     run(`net start MySQL`);
-
     addToPath(bin);
+    // create windows only user odbc
+    run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
+    run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
+    run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
   }
 
   run(`"${bin}\\mysql" -u root -e "SELECT VERSION()"`);
@@ -111,6 +115,7 @@ function installWindwos() {
     run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO '${username}'@'localhost'"`);
     run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
   }
+  return bin;
 }
 
 function installLinux() {
@@ -143,7 +148,11 @@ function installLinux() {
   run('sudo systemctl start mysql');
 
   // remove root password
-  run(`sudo mysqladmin -proot password ''`);
+  try {
+    run(`sudo mysqladmin -proot password ''`);
+  } catch (error) {
+    console.log("error on remove password: ", error);
+  }
 
   // add user
   if(username && username !== "") {
@@ -152,11 +161,12 @@ function installLinux() {
     run(`sudo mysql -e "FLUSH PRIVILEGES"`);
   }
   bin = `/usr/bin`;
+  return bin;
 }
 
 
 if (process.platform == 'darwin') {
-  installMac();
+  bin = installMac();
 } else if (process.platform == 'win32') {
   bin = installWindwos();
 } else if (process.platform == 'linux') {
@@ -166,5 +176,10 @@ if (process.platform == 'darwin') {
 }
 
 if (database) {
-  runSafe(path.join(bin, 'mysqladmin'), 'create', database);
+try {
+  run(path.join(bin, 'mysqladmin'), ' -u root create', database);
+} catch (error) {
+  console.log("error on create database: ", error);
+}
+  
 }
