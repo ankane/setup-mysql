@@ -25,6 +25,17 @@ Specify a version
       with:
         mysql-version: 8.0
 ```
+## Optional User and password 
+
+Optionally you can add an additional user. The user can have an optional password.
+
+```yml
+    - uses: ankane/setup-mysql@v1
+      with:
+        mysql-version: 8.0
+        username: user
+        password: password
+```
 
 Currently supports
 

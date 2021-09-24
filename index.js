@@ -41,6 +41,8 @@ function addToPath(newPath) {
 const image = process.env['ImageOS'];
 const defaultVersion = (image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
+const username = process.env['INPUT_USERNAME'] || "";
+const password = process.env['INPUT_PASSWORD'] || "";
 
 // TODO make OS-specific
 if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
@@ -56,7 +58,7 @@ function useTmpDir() {
   process.chdir(tmpDir);
 }
 
-if (process.platform == 'darwin') {
+function installMac() {
   // install
   run(`brew install mysql@${mysqlVersion}`);
 
@@ -65,14 +67,17 @@ if (process.platform == 'darwin') {
   run(`${bin}/mysql.server start`);
 
   // add user
-  run(`${bin}/mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
-  run(`${bin}/mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
-  run(`${bin}/mysql -e "FLUSH PRIVILEGES"`);
-
+  if(username && username !== "") {
+    run(`${bin}/mysql -e "CREATE USER '${username}'@'localhost' IDENTIFIED BY '${password}'"`);
+    run(`${bin}/mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${username}'@'localhost'"`);
+    run(`${bin}/mysql -e "FLUSH PRIVILEGES"`);
+  }
   // set path
   addToPath(bin);
-} else if (process.platform == 'win32') {
-  // install
+}
+
+function installWindwos() {
+ // install
   const versionMap = {
     '8.0': '8.0.22',
     '5.7': '5.7.32',
@@ -101,11 +106,15 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "SELECT VERSION()"`);
 
   // add user
-  run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
-  run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
-  run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
-} else {
-  // check if it is installed
+  if(username && username !== "") {
+    run(`"${bin}\\mysql" -u root -e "CREATE USER '${username}'@'localhost' IDENTIFIED BY '${password}'"`);
+    run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO '${username}'@'localhost'"`);
+    run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
+  }
+}
+
+function installLinux() {
+    // check if it is installed
   if(!checkInstalled("mysql-server-${mysqlVersion}")) {
     if (image == 'ubuntu20') {
       if (mysqlVersion != '8.0') {
@@ -137,11 +146,23 @@ if (process.platform == 'darwin') {
   run(`sudo mysqladmin -proot password ''`);
 
   // add user
-  run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
-  run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
-  run(`sudo mysql -e "FLUSH PRIVILEGES"`);
-
+  if(username && username !== "") {
+    run(`sudo mysql -e "CREATE USER '${username}'@'localhost' IDENTIFIED BY '${password}'"`);
+    run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${username}'@'localhost'"`);
+    run(`sudo mysql -e "FLUSH PRIVILEGES"`);
+  }
   bin = `/usr/bin`;
+}
+
+
+if (process.platform == 'darwin') {
+  installMac();
+} else if (process.platform == 'win32') {
+  bin = installWindwos();
+} else if (process.platform == 'linux') {
+  bin = installLinux();
+} else {
+  console.error(process.platform + " is not supported");
 }
 
 if (database) {
