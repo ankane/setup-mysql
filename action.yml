@@ -15,6 +15,10 @@ inputs:
     description: Password for the user
     default: ""
     required: false
+  install-directory:
+    description: Installation path of MySQL. Only relevant on Windows
+    default: ${{ runner.workspace }}\MySQL
+    required: false 
 runs:
   using: node12
   main: index.js

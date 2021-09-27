@@ -12,6 +12,66 @@ function run(command) {
   execSync(command, {stdio: 'inherit', env: env});
 }
 
+function copyFileSync( source, target ) {
+    // Source https://stackoverflow.com/a/26038979/2127939
+    var targetFile = target;
+
+    // If target is a directory, a new file with the same name will be created
+    if ( fs.existsSync( target ) ) {
+        if ( fs.lstatSync( target ).isDirectory() ) {
+            targetFile = path.join( target, path.basename( source ) );
+        }
+    }
+
+    fs.writeFileSync(targetFile, fs.readFileSync(source));
+}
+
+function copyFolderRecursiveSync( source, target ) {
+    // Source https://stackoverflow.com/a/26038979/2127939
+    var files = [];
+
+    // Check if folder needs to be created or integrated
+    var targetFolder = path.join( target, path.basename( source ) );
+    if ( !fs.existsSync( targetFolder ) ) {
+        fs.mkdirSync( targetFolder );
+    }
+
+    // Copy
+    if ( fs.lstatSync( source ).isDirectory() ) {
+        files = fs.readdirSync( source );
+        files.forEach( function ( file ) {
+            var curSource = path.join( source, file );
+            if ( fs.lstatSync( curSource ).isDirectory() ) {
+                copyFolderRecursiveSync( curSource, targetFolder );
+            } else {
+                copyFileSync( curSource, targetFolder );
+            }
+        } );
+    }
+}
+
+function integrateFolderRecursiveSync(source, target) {
+    var files = [];
+
+    // Check if folder needs to be created or integrated
+    var targetFolder = target;
+    if ( !fs.existsSync( targetFolder ) ) {
+        fs.mkdirSync( targetFolder );
+    }
+        // Copy
+    if ( fs.lstatSync( source ).isDirectory() ) {
+        files = fs.readdirSync( source );
+        files.forEach( function ( file ) {
+            var curSource = path.join( source, file );
+            if ( fs.lstatSync( curSource ).isDirectory() ) {
+                copyFolderRecursiveSync( curSource, targetFolder );
+            } else {
+                copyFileSync( curSource, targetFolder );
+            }
+        } );
+    }
+}
+
 function runSafe() {
   const args = Array.from(arguments);
   console.log(args.join(' '));
@@ -43,7 +103,7 @@ const defaultVersion = (image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 const username = process.env['INPUT_USERNAME'] || "";
 const password = process.env['INPUT_PASSWORD'] || "";
-
+const mysqlInstallDirectory = process.env['INPUT_install-directory'] || "";
 // TODO make OS-specific
 if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
@@ -84,15 +144,13 @@ function installWindwos() {
     '5.7': '5.7.32',
     '5.6': '5.6.50'
   };
-  installDir = "C:\\Program Files\\MySQL";
-  bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
-  if (! fs.existsSync(installDir)) {
+  bin = `${mysqlInstallDirectory}\\bin`;
+  if (! fs.existsSync(mysqlInstallDirectory)) {
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
     run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
     run(`unzip -q mysql.zip`);
-    fs.mkdirSync(installDir);
-    fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
+    integrateFolderRecursiveSync(`mysql-${fullVersion}-winx64`, mysqlInstallDirectory);
 
     // start
     if (mysqlVersion != '5.6') {
