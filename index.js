@@ -74,7 +74,6 @@ function integrateFolderRecursiveSync(source, target) {
 
 function runSafe() {
   const args = Array.from(arguments);
-  console.log(args.join(' '));
   const command = args.shift();
   // spawn is safer and more lightweight than exec
   const ret = spawnSync(command, args, {stdio: 'inherit'});
@@ -86,11 +85,9 @@ function runSafe() {
 function checkInstalled(package) {
   command = "dpkg -l | grep " + package;
   const args = Array.from(arguments);
-  console.log(command);
   let env = Object.assign({}, process.env);
   delete env.CI; // for Homebrew on macos-11.0
   const ret = execSync(command).toString();
-  console.log(ret);
   return !ret || ret !== ""; 
 }
 
@@ -209,7 +206,7 @@ function installLinux() {
   try {
     run(`sudo mysqladmin -proot password ''`);
   } catch (error) {
-    console.log("error on remove password: ", error);
+    console.error("error on remove password: ", error);
   }
 
   // add user
@@ -237,7 +234,7 @@ if (database) {
 try {
   run(path.join(bin, 'mysqladmin'), ' -u root create', database);
 } catch (error) {
-  console.log("error on create database: ", error);
+  console.error("error on create database: ", error);
 }
   
 }
