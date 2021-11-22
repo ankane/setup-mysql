@@ -79,6 +79,7 @@ Install [time zone support](https://dev.mysql.com/doc/refman/8.0/en/time-zone-su
 - [setup-postgres](https://github.com/ankane/setup-postgres)
 - [setup-mongodb](https://github.com/ankane/setup-mongodb)
 - [setup-elasticsearch](https://github.com/ankane/setup-elasticsearch)
+- [setup-opensearch](https://github.com/ankane/setup-opensearch)
 - [setup-sqlserver](https://github.com/ankane/setup-sqlserver)
 
 ## Contributing
