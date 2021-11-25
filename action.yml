@@ -1,9 +1,24 @@
 name: Setup MySQL
+description: install and start the mysql server
 inputs:
   mysql-version:
     description: The MySQL version to download (if necessary) and use
+    required: true
   database:
     description: Database to create
+    required: false
+  username:
+    description: Username for the database
+    required: false
+    default: ""
+  password: 
+    description: Password for the user
+    default: ""
+    required: false
+  install-directory:
+    description: Installation path of MySQL. Only relevant on Windows
+    default: ${{ runner.workspace }}\MySQL
+    required: false 
 runs:
   using: node12
   main: index.js

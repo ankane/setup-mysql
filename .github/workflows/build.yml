@@ -10,6 +10,8 @@ jobs:
         include:
           - os: ubuntu-20.04
             mysql-version: 8.0
+          - os: ubuntu-20.04
+            mysql-version: 5.7
           - os: ubuntu-18.04
             mysql-version: 8.0
           - os: ubuntu-18.04
@@ -40,14 +42,47 @@ jobs:
             mysql-version: 5.6
     steps:
     - uses: actions/checkout@v2
-    - uses: ./.
+    
+    - name: Install mysql
+      uses: ./.
       with:
         mysql-version: ${{ matrix.mysql-version }}
         database: testdb
-    - run: mysql --version
-    - run: mysql -e 'SELECT VERSION()'
-    - run: mysql -e 'SELECT CURRENT_USER()'
-    - run: mysql -e 'SELECT DATABASE()'
-    - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
-    - run: mysqladmin create testdb2
-    - run: mysql -D testdb -e 'SELECT DATABASE()'
+        username: "1234"
+        password: "abcd"
+
+    - name: Install mysql second time
+      uses: ./.
+      with:
+        mysql-version: ${{ matrix.mysql-version }}
+        database: testdb
+        username: "5678"
+        password: "efgh"
+
+    - name: Test admin
+      run: |
+        mysql --version
+        mysql -uroot -e 'SELECT * FROM mysql.user;'
+        mysql -uroot -e 'SELECT VERSION()'
+        mysql -uroot -e 'SELECT CURRENT_USER()'
+        mysql -uroot -e 'SELECT DATABASE()'
+        mysql -uroot -e "SHOW VARIABLES LIKE 'socket'"
+        mysqladmin -uroot create testdb2
+        mysql -uroot -D testdb2 -e 'SELECT DATABASE()'
+        echo Y | mysqladmin -uroot drop testdb2
+
+    - name: Test first user
+      run: |
+        mysql --version
+        mysql -u1234 -pabcd -e 'SELECT VERSION()'
+        mysql -u1234 -pabcd -e 'SELECT CURRENT_USER()'
+        mysql -u1234 -pabcd -e 'SELECT DATABASE()'
+        mysql -u1234 -pabcd -e "SHOW VARIABLES LIKE 'socket'"
+
+    - name: Test second user
+      run: |
+        mysql --version
+        mysql -u5678 -pefgh -e 'SELECT VERSION()'
+        mysql -u5678 -pefgh -e 'SELECT CURRENT_USER()'
+        mysql -u5678 -pefgh -e 'SELECT DATABASE()'
+        mysql -u5678 -pefgh -e "SHOW VARIABLES LIKE 'socket'"
