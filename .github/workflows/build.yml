@@ -2,7 +2,6 @@ name: build
 on: [push, pull_request]
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -26,6 +25,10 @@ jobs:
             mysql-version: 5.7
           - os: macos-10.15
             mysql-version: 5.6
+          - os: windows-2022
+            mysql-version: 8.0
+          - os: windows-2022
+            mysql-version: 5.7
           - os: windows-2019
             mysql-version: 8.0
           - os: windows-2019
