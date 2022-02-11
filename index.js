@@ -104,7 +104,7 @@ if (process.platform == 'darwin') {
 
       // install
       useTmpDir();
-      run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb`);
+      run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb`);
       run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion} | sudo debconf-set-selections`);
       run(`sudo dpkg -i mysql-apt-config.deb`);
       // TODO only update single list
