@@ -36,7 +36,6 @@ Version | `8.0` | `5.7` | `5.6`
 `macos-10.15` | default | ✓ | ✓
 `windows-2022` | default | ✓ |
 `windows-2019` | default | ✓ | ✓
-`windows-2016` | default | ✓ | ✓
 
 Test against multiple versions
 
