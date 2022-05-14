@@ -28,7 +28,7 @@ function addToPath(newPath) {
 }
 
 const image = process.env['ImageOS'];
-const defaultVersion = (image == 'ubuntu16' || image == 'ubuntu18') ? '5.7' : '8.0';
+const defaultVersion = (image == 'ubuntu18') ? '5.7' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
@@ -91,7 +91,7 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (image == 'ubuntu20') {
+  if (image == 'ubuntu20' || image == 'ubuntu22') {
     if (mysqlVersion != '8.0') {
       // install
       run(`sudo apt-get install mysql-server-${mysqlVersion}`);
