@@ -32,7 +32,7 @@ const defaultVersion = (image == 'ubuntu18') ? '5.7' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
-if (!['8.0', '5.7', '5.6'].includes(mysqlVersion)) {
+if (!['8.0', '5.7'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
@@ -64,8 +64,7 @@ if (process.platform == 'darwin') {
   // install
   const versionMap = {
     '8.0': '8.0.27',
-    '5.7': '5.7.36',
-    '5.6': '5.6.51'
+    '5.7': '5.7.36'
   };
   const fullVersion = versionMap[mysqlVersion];
   useTmpDir();
@@ -76,9 +75,7 @@ if (process.platform == 'darwin') {
 
   // start
   bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
-  if (mysqlVersion != '5.6') {
-    run(`"${bin}\\mysqld" --initialize-insecure`);
-  }
+  run(`"${bin}\\mysqld" --initialize-insecure`);
   run(`"${bin}\\mysqld" --install`);
   run(`net start MySQL`);
 
@@ -97,10 +94,6 @@ if (process.platform == 'darwin') {
     }
   } else {
     if (mysqlVersion != '5.7') {
-      if (mysqlVersion == '5.6') {
-        throw `MySQL version not supported yet: ${mysqlVersion}`;
-      }
-
       // install
       useTmpDir();
       run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb`);
