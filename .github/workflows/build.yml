@@ -9,42 +9,22 @@ jobs:
         include:
           - os: ubuntu-22.04
             mysql-version: 8.0
-          - os: ubuntu-20.04
-            mysql-version: 8.0
-          - os: ubuntu-18.04
-            mysql-version: 8.0
-          - os: ubuntu-18.04
-            mysql-version: 5.7
           - os: macos-12
             mysql-version: 8.0
-          - os: macos-12
-            mysql-version: 5.7
-          - os: macos-11
-            mysql-version: 8.0
-          - os: macos-11
-            mysql-version: 5.7
-          - os: macos-10.15
-            mysql-version: 8.0
-          - os: macos-10.15
-            mysql-version: 5.7
           - os: windows-2022
             mysql-version: 8.0
-          - os: windows-2022
-            mysql-version: 5.7
-          - os: windows-2019
-            mysql-version: 8.0
-          - os: windows-2019
-            mysql-version: 5.7
     steps:
     - uses: actions/checkout@v3
     - uses: ./.
       with:
         mysql-version: ${{ matrix.mysql-version }}
         database: testdb
+        time-zone-support: true
     - run: mysql --version
     - run: mysql -e 'SELECT VERSION()'
     - run: mysql -e 'SELECT CURRENT_USER()'
     - run: mysql -e 'SELECT DATABASE()'
     - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
+    - run: mysql -e "SELECT CONVERT_TZ(NOW(), '+00:00', 'Pacific/Honolulu')"
     - run: mysqladmin create testdb2
     - run: mysql -D testdb -e 'SELECT DATABASE()'

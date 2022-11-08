@@ -37,6 +37,7 @@ if (!['8.0', '5.7'].includes(mysqlVersion)) {
 }
 
 const database = process.env['INPUT_DATABASE'];
+const timeZoneSupport = process.env['INPUT_TIME-ZONE-SUPPORT'] == 'true';
 
 let bin;
 
@@ -57,6 +58,11 @@ if (process.platform == 'darwin') {
   run(`${bin}/mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
   run(`${bin}/mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
   run(`${bin}/mysql -e "FLUSH PRIVILEGES"`);
+
+  // install time zone support
+  if (timeZoneSupport) {
+    run(`${bin}/mysql_tzinfo_to_sql /usr/share/zoneinfo | ${bin}/mysql -u root mysql`);
+  }
 
   // set path
   addToPath(bin);
@@ -87,6 +93,11 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
+
+  if (timeZoneSupport) {
+    // TODO install time zone support
+    throw `time-zone-support option not supported on Windows yet`;
+  }
 } else {
   if (image == 'ubuntu20' || image == 'ubuntu22') {
     if (mysqlVersion != '8.0') {
@@ -115,6 +126,11 @@ if (process.platform == 'darwin') {
   run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
   run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
   run(`sudo mysql -e "FLUSH PRIVILEGES"`);
+
+  // install time zone support
+  if (timeZoneSupport) {
+    run(`mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql`);
+  }
 
   bin = `/usr/bin`;
 }

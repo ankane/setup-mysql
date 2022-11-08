@@ -61,18 +61,20 @@ Create a database
         database: testdb
 ```
 
+Install [time zone support](https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html)
+
+```yml
+    - uses: ankane/setup-mysql@v1
+      with:
+        time-zone-support: true
+```
+
 ## Extra Steps
 
 Run queries
 
 ```yml
     - run: mysql -D testdb -e 'SELECT VERSION()'
-```
-
-Install [time zone support](https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html)
-
-```yml
-    - run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 ```
 
 ## Related Actions

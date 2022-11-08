@@ -4,6 +4,8 @@ inputs:
     description: The MySQL version to download (if necessary) and use
   database:
     description: Database to create
+  time-zone-support:
+    description: Install time zone support
 runs:
   using: node16
   main: index.js
