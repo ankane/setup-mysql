@@ -93,8 +93,7 @@ if (process.platform == 'darwin') {
 } else {
   if (image == 'ubuntu20' || image == 'ubuntu22') {
     if (mysqlVersion != '8.0') {
-      // install
-      run(`sudo apt-get install mysql-server-${mysqlVersion}`);
+      throw `MySQL version not supported with this image: ${mysqlVersion} on ${image}`;
     }
   } else {
     if (mysqlVersion != '5.7') {
