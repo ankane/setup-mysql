@@ -7,10 +7,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
-            mysql-version: 8.0
-          - os: macos-12
-            mysql-version: 8.0
+          # - os: ubuntu-22.04
+          #   mysql-version: 8.0
+          # - os: macos-12
+          #   mysql-version: 8.0
           - os: windows-2022
             mysql-version: 8.0
     steps:

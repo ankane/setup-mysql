@@ -95,8 +95,10 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 
   if (timeZoneSupport) {
-    // TODO install time zone support
-    throw `time-zone-support option not supported on Windows yet`;
+    // https://dev.mysql.com/downloads/timezones.html
+    run(`curl -Ls -o timezone.zip https://downloads.mysql.com/general/timezone_2022f_posix_sql.zip`);
+    run(`unzip -q timezone.zip`);
+    run(`"${bin}\\mysql" -u root < timezone_2022f_posix_sql\\timezone_posix.sql`);
   }
 } else {
   if (image == 'ubuntu20' || image == 'ubuntu22') {
