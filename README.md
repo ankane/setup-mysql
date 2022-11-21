@@ -13,7 +13,7 @@ The missing action for MySQL :tada:
 Add it as a step to your workflow
 
 ```yml
-    - uses: ankane/setup-mysql@v1
+      - uses: ankane/setup-mysql@v1
 ```
 
 ## Versions
@@ -21,9 +21,9 @@ Add it as a step to your workflow
 Specify a version
 
 ```yml
-    - uses: ankane/setup-mysql@v1
-      with:
-        mysql-version: 8.0
+      - uses: ankane/setup-mysql@v1
+        with:
+          mysql-version: 8.0
 ```
 
 Currently supports
@@ -46,9 +46,9 @@ Test against multiple versions
       matrix:
         mysql-version: [8.0, 5.7]
     steps:
-    - uses: ankane/setup-mysql@v1
-      with:
-        mysql-version: ${{ matrix.mysql-version }}
+      - uses: ankane/setup-mysql@v1
+        with:
+          mysql-version: ${{ matrix.mysql-version }}
 ```
 
 ## Options
@@ -56,9 +56,9 @@ Test against multiple versions
 Create a database
 
 ```yml
-    - uses: ankane/setup-mysql@v1
-      with:
-        database: testdb
+      - uses: ankane/setup-mysql@v1
+        with:
+          database: testdb
 ```
 
 ## Extra Steps
@@ -66,13 +66,13 @@ Create a database
 Run queries
 
 ```yml
-    - run: mysql -D testdb -e 'SELECT VERSION()'
+      - run: mysql -D testdb -e 'SELECT VERSION()'
 ```
 
 Install [time zone support](https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html)
 
 ```yml
-    - run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+      - run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 ```
 
 ## Related Actions
