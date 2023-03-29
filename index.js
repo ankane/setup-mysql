@@ -63,8 +63,8 @@ if (process.platform == 'darwin') {
 } else if (process.platform == 'win32') {
   // install
   const versionMap = {
-    '8.0': '8.0.27',
-    '5.7': '5.7.36'
+    '8.0': '8.0.32',
+    '5.7': '5.7.41'
   };
   const fullVersion = versionMap[mysqlVersion];
   useTmpDir();
