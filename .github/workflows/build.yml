@@ -28,7 +28,7 @@ jobs:
           - os: windows-2019
             mysql-version: 5.7
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.
         with:
           mysql-version: ${{ matrix.mysql-version }}

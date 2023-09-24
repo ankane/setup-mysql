@@ -5,5 +5,5 @@ inputs:
   database:
     description: Database to create
 runs:
-  using: node16
+  using: node20
   main: index.js
