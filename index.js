@@ -62,16 +62,18 @@ if (process.platform == 'darwin') {
   addToPath(bin);
 } else if (process.platform == 'win32') {
   // install
-  const versionMap = {
-    '8.0': '8.0.32',
-    '5.7': '5.7.41'
-  };
-  const fullVersion = versionMap[mysqlVersion];
-  useTmpDir();
-  run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
-  run(`unzip -q mysql.zip`);
-  fs.mkdirSync(`C:\\Program Files\\MySQL`);
-  fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
+  const install = image == 'win22' ? mysqlVersion != '8.0' : mysqlVersion != '5.7';
+  if (install) {
+    const versionMap = {
+      '8.0': '8.0.32',
+      '5.7': '5.7.41'
+    };
+    const fullVersion = versionMap[mysqlVersion];
+    useTmpDir();
+    run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
+    run(`unzip -q mysql.zip`);
+    fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
+  }
 
   // start
   bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
