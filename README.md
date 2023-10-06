@@ -32,6 +32,7 @@ Version | `8.0` | `5.7`
 --- | --- | ---
 `ubuntu-22.04` | default |
 `ubuntu-20.04` | default |
+`macos-13` | default | ✓
 `macos-12` | default | ✓
 `macos-11` | default | ✓
 `windows-2022` | default | ✓
