@@ -11,6 +11,10 @@ jobs:
             mysql-version: 8.0
           - os: ubuntu-20.04
             mysql-version: 8.0
+          - os: macos-14
+            mysql-version: 8.0
+          - os: macos-14
+            mysql-version: 5.7
           - os: macos-13
             mysql-version: 8.0
           - os: macos-13
