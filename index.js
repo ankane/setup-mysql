@@ -50,7 +50,7 @@ if (process.platform == 'darwin') {
   run(`brew install mysql@${mysqlVersion}`);
 
   // start
-  const prefix = process.env['ImageOS'] == 'macos14' ? '/opt/homebrew' : '/usr/local';
+  const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
   bin = `${prefix}/opt/mysql@${mysqlVersion}/bin`;
   run(`${bin}/mysql.server start`);
 
