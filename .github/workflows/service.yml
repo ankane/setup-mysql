@@ -16,4 +16,4 @@ jobs:
         ports:
           - 3306:3306
     steps:
-    - run: mysql -h 127.0.0.1 -u root -e 'SELECT VERSION()'
+      - run: mysql -h 127.0.0.1 -u root -e 'SELECT VERSION()'
