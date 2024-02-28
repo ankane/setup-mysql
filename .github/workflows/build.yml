@@ -7,34 +7,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
-            mysql-version: 8.0
-          - os: ubuntu-20.04
-            mysql-version: 8.0
-          - os: macos-14
-            mysql-version: 8.0
-          - os: macos-14
-            mysql-version: 5.7
-          - os: macos-13
-            mysql-version: 8.0
-          - os: macos-13
-            mysql-version: 5.7
-          - os: macos-12
-            mysql-version: 8.0
-          - os: macos-12
-            mysql-version: 5.7
-          - os: macos-11
-            mysql-version: 8.0
-          - os: macos-11
-            mysql-version: 5.7
           - os: windows-2022
             mysql-version: 8.0
-          - os: windows-2022
-            mysql-version: 5.7
-          - os: windows-2019
-            mysql-version: 8.0
-          - os: windows-2019
-            mysql-version: 5.7
     steps:
       - uses: actions/checkout@v4
       - uses: ./.
