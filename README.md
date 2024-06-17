@@ -30,6 +30,7 @@ Currently supports
 
 Version | `8.0` | `5.7`
 --- | --- | ---
+`ubuntu-24.04` | default |
 `ubuntu-22.04` | default |
 `ubuntu-20.04` | default |
 `macos-14` | default | ✓
