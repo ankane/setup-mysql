@@ -32,7 +32,7 @@ const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
-if (!['8.4', '8.0', '5.7'].includes(mysqlVersion)) {
+if (!['8.4', '8.0'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
@@ -63,12 +63,11 @@ if (process.platform == 'darwin') {
   addToPath(bin);
 } else if (process.platform == 'win32') {
   // install
-  const install = image == 'win19' ? mysqlVersion != '5.7' : mysqlVersion != '8.0';
+  const install = image == 'win19' ? true : mysqlVersion != '8.0';
   if (install) {
     const versionMap = {
       '8.4': '8.4.0',
-      '8.0': '8.0.32',
-      '5.7': '5.7.41'
+      '8.0': '8.0.32'
     };
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
@@ -92,9 +91,7 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (mysqlVersion == '5.7') {
-    throw `MySQL version not supported with this image: ${mysqlVersion} on ${image}`;
-  } else if (mysqlVersion != '8.0') {
+  if (mysqlVersion != '8.0') {
     // install
     useTmpDir();
     run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
