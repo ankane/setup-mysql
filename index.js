@@ -32,7 +32,7 @@ const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
-if (!['8.0', '5.7'].includes(mysqlVersion)) {
+if (!['8.4', '8.0', '5.7'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
@@ -91,8 +91,17 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (mysqlVersion != '8.0') {
+  if (mysqlVersion == '5.7') {
     throw `MySQL version not supported with this image: ${mysqlVersion} on ${image}`;
+  } else if (mysqlVersion != '8.0') {
+    // install
+    useTmpDir();
+    run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
+    run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
+    run(`sudo dpkg -i mysql-apt-config.deb`);
+    // TODO only update single list
+    run(`sudo apt-get update`);
+    run(`sudo apt-get install mysql-server`);
   }
 
   // start

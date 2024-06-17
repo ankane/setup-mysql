@@ -28,23 +28,23 @@ Specify a version
 
 Currently supports
 
-Version | `8.0` | `5.7`
---- | --- | ---
-`ubuntu-24.04` | default |
-`ubuntu-22.04` | default |
-`ubuntu-20.04` | default |
-`macos-14` | default | ✓
-`macos-13` | default | ✓
-`macos-12` | default | ✓
-`windows-2022` | default | ✓
-`windows-2019` | default | ✓
+Version | `8.4` | `8.0` | `5.7`
+--- | --- | --- | ---
+`ubuntu-24.04` | ✓ | default |
+`ubuntu-22.04` | ✓ | default |
+`ubuntu-20.04` | ✓ | default |
+`macos-14` | | default | ✓
+`macos-13` | | default | ✓
+`macos-12` | | default | ✓
+`windows-2022` | | default | ✓
+`windows-2019` | | default | ✓
 
 Test against multiple versions
 
 ```yml
     strategy:
       matrix:
-        mysql-version: [8.0, 5.7]
+        mysql-version: [8.4, 8.0]
     steps:
       - uses: ankane/setup-mysql@v1
         with:
