@@ -6,7 +6,7 @@ The missing action for MySQL :tada:
 - Works on Linux, Mac, and Windows
 - Supports different versions
 
-[![Build Status](https://github.com/ankane/setup-mysql/workflows/build/badge.svg?branch=v1)](https://github.com/ankane/setup-mysql/actions)
+[![Build Status](https://github.com/ankane/setup-mysql/actions/workflows/build.yml/badge.svg)](https://github.com/ankane/setup-mysql/actions)
 
 ## Getting Started
 
