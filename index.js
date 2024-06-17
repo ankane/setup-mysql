@@ -28,7 +28,7 @@ function addToPath(newPath) {
 }
 
 const image = process.env['ImageOS'];
-const defaultVersion = (image == 'ubuntu18') ? '5.7' : '8.0';
+const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
@@ -91,21 +91,8 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (image == 'ubuntu20' || image == 'ubuntu22') {
-    if (mysqlVersion != '8.0') {
-      throw `MySQL version not supported with this image: ${mysqlVersion} on ${image}`;
-    }
-  } else {
-    if (mysqlVersion != '5.7') {
-      // install
-      useTmpDir();
-      run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb`);
-      run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion} | sudo debconf-set-selections`);
-      run(`sudo dpkg -i mysql-apt-config.deb`);
-      // TODO only update single list
-      run(`sudo apt-get update`);
-      run(`sudo apt-get install mysql-server`);
-    }
+  if (mysqlVersion != '8.0') {
+    throw `MySQL version not supported with this image: ${mysqlVersion} on ${image}`;
   }
 
   // start
