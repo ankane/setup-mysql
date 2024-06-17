@@ -65,6 +65,7 @@ if (process.platform == 'darwin') {
   // install
   const install = image == 'win19' ? true : mysqlVersion != '8.0';
   if (install) {
+    // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
       '8.4': '8.4.0',
       '8.0': '8.0.37'
@@ -94,6 +95,7 @@ if (process.platform == 'darwin') {
   if (mysqlVersion != '8.0') {
     // install
     useTmpDir();
+    // https://dev.mysql.com/downloads/repo/apt/
     run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
     run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
     run(`sudo dpkg -i mysql-apt-config.deb`);
