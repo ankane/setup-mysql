@@ -25,10 +25,6 @@ jobs:
             mysql-version: 8.0
           - os: macos-12
             mysql-version: 5.7
-          - os: macos-11
-            mysql-version: 8.0
-          - os: macos-11
-            mysql-version: 5.7
           - os: windows-2022
             mysql-version: 8.0
           - os: windows-2022

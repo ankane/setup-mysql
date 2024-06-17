@@ -36,7 +36,6 @@ Version | `8.0` | `5.7`
 `macos-14` | default | ✓
 `macos-13` | default | ✓
 `macos-12` | default | ✓
-`macos-11` | default | ✓
 `windows-2022` | default | ✓
 `windows-2019` | default | ✓
 
