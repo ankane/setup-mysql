@@ -32,7 +32,7 @@ const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
-if (!['8.4', '8.0'].includes(mysqlVersion)) {
+if (!['9.0', '8.4', '8.0'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
@@ -67,6 +67,7 @@ if (process.platform == 'darwin') {
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
+      '9.0': '9.0.1',
       '8.4': '8.4.0',
       '8.0': '8.0.37'
     };
