@@ -98,7 +98,8 @@ if (process.platform == 'darwin') {
     useTmpDir();
     // https://dev.mysql.com/downloads/repo/apt/
     run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
-    run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
+    const selectServer = mysqlVersion == '9.0' ? "mysql-innovation" : `mysql-${mysqlVersion}-lts`;
+    run(`echo mysql-apt-config mysql-apt-config/select-server select ${selectServer} | sudo debconf-set-selections`);
     run(`sudo dpkg -i mysql-apt-config.deb`);
     // TODO only update single list
     run(`sudo apt-get update`);
