@@ -23,4 +23,4 @@ jobs:
       - run: mysqladmin create testdb2
       - run: mysql -D testdb -e 'SELECT DATABASE()'
       - if: failure()
-        run: sudo systemctl status mysql.service
+        run: journalctl -xeu mysql.service
