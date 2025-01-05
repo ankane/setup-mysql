@@ -31,6 +31,10 @@ jobs:
             mysql-version: 8.4
           - os: macos-13
             mysql-version: 8.0
+          - os: windows-2025
+            mysql-version: 8.4
+          - os: windows-2025
+            mysql-version: 8.0
           - os: windows-2022
             mysql-version: 8.4
           - os: windows-2022

@@ -67,8 +67,8 @@ if (process.platform == 'darwin') {
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
-      '8.4': '8.4.0',
-      '8.0': '8.0.37'
+      '8.4': '8.4.3',
+      '8.0': '8.0.40'
     };
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
