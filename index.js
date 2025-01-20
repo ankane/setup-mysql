@@ -92,7 +92,7 @@ if (process.platform == 'darwin') {
   run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
   run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
 } else {
-  if (mysqlVersion != '8.0') {
+  if (mysqlVersion != '8.0' || process.arch == 'arm64') {
     // install
     useTmpDir();
     // https://dev.mysql.com/downloads/repo/apt/
