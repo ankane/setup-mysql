@@ -34,7 +34,6 @@ Version | `8.4` | `8.0`
 `ubuntu-24.04-arm` | ✓ | default
 `ubuntu-22.04` | ✓ | default
 `ubuntu-22.04-arm` | ✓ | default
-`ubuntu-20.04` | ✓ | default
 `macos-15` | ✓ | default
 `macos-14` | ✓ | default
 `macos-13` | ✓ | default
