@@ -5,22 +5,22 @@ const path = require('path');
 const process = require('process');
 const spawnSync = require('child_process').spawnSync;
 
-function run(command) {
-  console.log(command);
-  let env = Object.assign({}, process.env);
-  delete env.CI; // for Homebrew on macos-11.0
-  execSync(command, {stdio: 'inherit', env: env});
-}
-
-function runSafe() {
+function run() {
   const args = Array.from(arguments);
-  console.log(args.join(' '));
+  console.log(args.map(v => v.toString().includes(' ') ? `"${v}"` : v).join(' '));
   const command = args.shift();
   // spawn is safer and more lightweight than exec
   const ret = spawnSync(command, args, {stdio: 'inherit'});
   if (ret.status !== 0) {
     throw ret.error;
   }
+}
+
+function runUnsafe(command) {
+  console.log(command);
+  let env = Object.assign({}, process.env);
+  delete env.CI; // for Homebrew on macos-11.0
+  execSync(command, {stdio: 'inherit', env: env});
 }
 
 function addToPath(newPath) {
@@ -47,17 +47,22 @@ function useTmpDir() {
 
 if (process.platform == 'darwin') {
   // install
-  run(`brew install mysql@${mysqlVersion}`);
+  run(`brew`, `install`, `mysql@${mysqlVersion}`);
 
   // start
   const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
   bin = `${prefix}/opt/mysql@${mysqlVersion}/bin`;
-  run(`${bin}/mysql.server start`);
+  run(`${bin}/mysql.server`, `start`);
 
   // add user
-  run(`${bin}/mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
-  run(`${bin}/mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
-  run(`${bin}/mysql -e "FLUSH PRIVILEGES"`);
+  const user = process.env['USER'];
+  if (user != 'runner') {
+    // TODO fix
+    throw `Unsupported user: ${user}`;
+  }
+  run(`${bin}/mysql`, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
+  run(`${bin}/mysql`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
+  run(`${bin}/mysql`, `-e`, `FLUSH PRIVILEGES`);
 
   // set path
   addToPath(bin);
@@ -72,52 +77,57 @@ if (process.platform == 'darwin') {
     };
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
-    run(`curl -Ls -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
-    run(`unzip -q mysql.zip`);
+    run(`curl`, `-Ls`, `-o`, `mysql.zip`, `https://dev.mysql.com/get/Downloads/MySQL-${mysqlVersion}/mysql-${fullVersion}-winx64.zip`)
+    run(`unzip`, `-q`, `mysql.zip`);
     fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
   }
 
   // start
   bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
-  run(`"${bin}\\mysqld" --initialize-insecure`);
-  run(`"${bin}\\mysqld" --install`);
-  run(`net start MySQL`);
+  run(`${bin}\\mysqld`, `--initialize-insecure`);
+  run(`${bin}\\mysqld`, `--install`);
+  run(`net`, `start`, `MySQL`);
 
   addToPath(bin);
 
-  run(`"${bin}\\mysql" -u root -e "SELECT VERSION()"`);
+  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `SELECT VERSION()`);
 
   // add user
-  run(`"${bin}\\mysql" -u root -e "CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''"`);
-  run(`"${bin}\\mysql" -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'"`);
-  run(`"${bin}\\mysql" -u root -e "FLUSH PRIVILEGES"`);
+  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''`);
+  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'`);
+  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `FLUSH PRIVILEGES`);
 } else {
   if (mysqlVersion != '8.0' || process.arch == 'arm64') {
     // install
     useTmpDir();
     // https://dev.mysql.com/downloads/repo/apt/
-    run(`wget -q -O mysql-apt-config.deb https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
-    run(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
-    run(`sudo dpkg -i mysql-apt-config.deb`);
+    run(`wget`, `-q`, `-O`, `mysql-apt-config.deb`, `https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
+    runUnsafe(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
+    run(`sudo`, `dpkg`, `-i`, `mysql-apt-config.deb`);
     // TODO only update single list
-    run(`sudo apt-get update`);
-    run(`sudo apt-get install mysql-server`);
+    run(`sudo`, `apt-get`, `update`);
+    run(`sudo`, `apt-get`, `install`, `mysql-server`);
   }
 
   // start
-  run('sudo systemctl start mysql');
+  run(`sudo`, `systemctl`, `start`, `mysql`);
 
   // remove root password
-  run(`sudo mysqladmin -proot password ''`);
+  run(`sudo`, `mysqladmin`, `-proot`, `password`, ``);
 
   // add user
-  run(`sudo mysql -e "CREATE USER '$USER'@'localhost' IDENTIFIED BY ''"`);
-  run(`sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'localhost'"`);
-  run(`sudo mysql -e "FLUSH PRIVILEGES"`);
+  const user = process.env['USER'];
+  if (user != 'runner') {
+    // TODO fix
+    throw `Unsupported user: ${user}`;
+  }
+  run(`sudo`, `mysql`, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
+  run(`sudo`, `mysql`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
+  run(`sudo`, `mysql`, `-e`, `FLUSH PRIVILEGES`);
 
   bin = `/usr/bin`;
 }
 
 if (database) {
-  runSafe(path.join(bin, 'mysqladmin'), 'create', database);
+  run(path.join(bin, 'mysqladmin'), 'create', database);
 }
