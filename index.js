@@ -63,7 +63,7 @@ if (process.platform == 'darwin') {
   addToPath(bin);
 } else if (process.platform == 'win32') {
   // install
-  const install = image == 'win19' ? true : mysqlVersion != '8.0';
+  const install = mysqlVersion != '8.0';
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {

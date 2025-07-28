@@ -39,7 +39,6 @@ Version | `8.4` | `8.0`
 `macos-13` | ✓ | default
 `windows-2025` | ✓ | default
 `windows-2022` | ✓ | default
-`windows-2019` | ✓ | default
 
 Test against multiple versions
 
