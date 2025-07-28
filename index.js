@@ -38,8 +38,10 @@ if (!['8.4', '8.0'].includes(mysqlVersion)) {
 }
 
 const database = process.env['INPUT_DATABASE'];
+const user = process.platform == 'win32' ? 'ODBC' : process.env['USER'];
 
 let bin;
+let cmdPrefix;
 
 function useTmpDir() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mysql-'));
@@ -55,18 +57,10 @@ if (process.platform == 'darwin') {
   bin = `${prefix}/opt/mysql@${mysqlVersion}/bin`;
   run(`${bin}/mysql.server`, `start`);
 
-  // add user
-  const user = process.env['USER'];
-  if (user != 'runner') {
-    // TODO fix
-    throw `Unsupported user: ${user}`;
-  }
-  run(`${bin}/mysql`, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
-  run(`${bin}/mysql`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
-  run(`${bin}/mysql`, `-e`, `FLUSH PRIVILEGES`);
-
   // set path
   addToPath(bin);
+
+  cmdPrefix = [`${bin}/mysql`];
 } else if (process.platform == 'win32') {
   // install
   const install = mysqlVersion != '8.0';
@@ -93,10 +87,7 @@ if (process.platform == 'darwin') {
 
   run(`${bin}\\mysql`, `-u`, `root`, `-e`, `SELECT VERSION()`);
 
-  // add user
-  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `CREATE USER 'ODBC'@'localhost' IDENTIFIED BY ''`);
-  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO 'ODBC'@'localhost'`);
-  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `FLUSH PRIVILEGES`);
+  cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
 } else {
   if (mysqlVersion != '8.0' || process.arch == 'arm64') {
     // install
@@ -116,18 +107,17 @@ if (process.platform == 'darwin') {
   // remove root password
   run(`sudo`, `mysqladmin`, `-proot`, `password`, ``);
 
-  // add user
-  const user = process.env['USER'];
-  if (user != 'runner') {
-    // TODO fix
-    throw `Unsupported user: ${user}`;
-  }
-  run(`sudo`, `mysql`, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
-  run(`sudo`, `mysql`, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
-  run(`sudo`, `mysql`, `-e`, `FLUSH PRIVILEGES`);
-
   bin = `/usr/bin`;
+  cmdPrefix = [`sudo`, `mysql`];
 }
+
+if (user != 'runner' && user != 'ODBC') {
+  // TODO fix
+  throw `Unsupported user: ${user}`;
+}
+run(...cmdPrefix, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
+run(...cmdPrefix, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
+run(...cmdPrefix, `-e`, `FLUSH PRIVILEGES`);
 
 if (database) {
   run(path.join(bin, 'mysqladmin'), 'create', database);
