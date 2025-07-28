@@ -50,7 +50,7 @@ function useTmpDir() {
 
 if (process.platform == 'darwin') {
   // install
-  run(`brew`, `install`, `mysql@${mysqlVersion}`);
+  run(`brew`, `install`, `--quiet`, `mysql@${mysqlVersion}`);
 
   // start
   const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
@@ -97,8 +97,8 @@ if (process.platform == 'darwin') {
     runUnsafe(`echo mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts | sudo debconf-set-selections`);
     run(`sudo`, `dpkg`, `-i`, `mysql-apt-config.deb`);
     // TODO only update single list
-    run(`sudo`, `apt-get`, `update`);
-    run(`sudo`, `apt-get`, `install`, `mysql-server`);
+    run(`sudo`, `apt-get`, `-qq`, `update`);
+    run(`sudo`, `apt-get`, `-qq`, `-o`, `Dpkg::Use-Pty=0`, `install`, `mysql-server`);
   }
 
   // start
