@@ -21,7 +21,7 @@ function run() {
 function addToPath(newPath) {
   fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
   cmdEnv.PATH += `${path.delimiter}${newPath}`;
-  console.log(cmdEnv.PATH);
+  console.log(Object.keys(cmdEnv));
 }
 
 function isMac() {
@@ -74,8 +74,8 @@ if (isMac()) {
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
-      '8.4': '8.4.3',
-      '8.0': '8.0.40'
+      '8.4': '8.4.6',
+      '8.0': '8.0.43'
     };
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
