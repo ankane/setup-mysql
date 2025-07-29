@@ -20,8 +20,10 @@ function run() {
 
 function addToPath(newPath) {
   fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
+  for (const k of Object.keys(cmdEnv)) {
+    console.log(k);
+  }
   cmdEnv.PATH += `${path.delimiter}${newPath}`;
-  console.log(Object.keys(cmdEnv));
 }
 
 function isMac() {
