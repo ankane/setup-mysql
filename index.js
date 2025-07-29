@@ -44,7 +44,7 @@ const user = process.env['INPUT_USER'] || defaultUser;
 if (!/^[a-z0-9_-]+$/i.test(user)) {
   throw `Unsupported user: ${user}`;
 }
-const userExists = user == 'root';
+const userExists = user == 'root' || (isWindows() && user == defaultUser);
 
 let bin;
 let cmdPrefix;
