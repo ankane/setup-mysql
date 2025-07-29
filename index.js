@@ -73,8 +73,8 @@ if (isMac()) {
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
-      '8.4': '8.4.3',
-      '8.0': '8.0.40'
+      '8.4': '8.4.6',
+      '8.0': '8.0.43'
     };
     const fullVersion = versionMap[mysqlVersion];
     useTmpDir();
