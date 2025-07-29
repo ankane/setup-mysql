@@ -21,6 +21,14 @@ function addToPath(newPath) {
   fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
 }
 
+function isMac() {
+  return process.platform == 'darwin';
+}
+
+function isWindows() {
+  return process.platform == 'win32';
+}
+
 const image = process.env['ImageOS'];
 const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
@@ -31,7 +39,12 @@ if (!['8.4', '8.0'].includes(mysqlVersion)) {
 }
 
 const database = process.env['INPUT_DATABASE'];
-const user = process.platform == 'win32' ? 'ODBC' : process.env['USER'];
+const defaultUser = isWindows() ? 'ODBC' : os.userInfo().username;
+const user = process.env['INPUT_USER'] || defaultUser;
+if (!/^[a-z0-9_-]+$/i.test(user)) {
+  throw `Unsupported user: ${user}`;
+}
+const userExists = user == 'root';
 
 let bin;
 let cmdPrefix;
@@ -41,7 +54,7 @@ function useTmpDir() {
   process.chdir(tmpDir);
 }
 
-if (process.platform == 'darwin') {
+if (isMac()) {
   // install
   run(`brew`, `install`, `--quiet`, `mysql@${mysqlVersion}`);
 
@@ -54,7 +67,7 @@ if (process.platform == 'darwin') {
   addToPath(bin);
 
   cmdPrefix = [`${bin}/mysql`];
-} else if (process.platform == 'win32') {
+} else if (isWindows()) {
   // install
   const install = mysqlVersion != '8.0';
   if (install) {
@@ -105,14 +118,12 @@ if (process.platform == 'darwin') {
   cmdPrefix = [`sudo`, `mysql`];
 }
 
-if (user != 'runner' && user != 'ODBC') {
-  // TODO fix
-  throw `Unsupported user: ${user}`;
+if (!userExists) {
+  run(...cmdPrefix, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
+  run(...cmdPrefix, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
+  run(...cmdPrefix, `-e`, `FLUSH PRIVILEGES`);
 }
-run(...cmdPrefix, `-e`, `CREATE USER '${user}'@'localhost' IDENTIFIED BY ''`);
-run(...cmdPrefix, `-e`, `GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost'`);
-run(...cmdPrefix, `-e`, `FLUSH PRIVILEGES`);
 
 if (database) {
-  run(path.join(bin, 'mysqladmin'), 'create', database);
+  run(path.join(bin, 'mysqladmin'), `-u`, user, `create`, database);
 }

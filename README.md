@@ -69,6 +69,14 @@ Create a database
           database: testdb
 ```
 
+Specify a user
+
+```yml
+      - uses: ankane/setup-mysql@v1
+        with:
+          user: testuser
+```
+
 ## Extra Steps
 
 Run queries

@@ -4,6 +4,8 @@ inputs:
     description: The MySQL version to download (if necessary) and use
   database:
     description: Database to create
+  user:
+    description: User to create
 runs:
   using: node20
   main: index.js
