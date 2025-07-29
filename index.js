@@ -3,15 +3,16 @@ const os = require('os');
 const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 
+const cmdEnv = Object.assign({}, process.env);
+cmdEnv.HOMEBREW_NO_AUTO_UPDATE = '1';
+cmdEnv.HOMEBREW_NO_INSTALL_CLEANUP = '1';
+
 function run() {
   const args = Array.from(arguments);
   console.log(args.map(v => v.toString().includes(' ') ? `"${v}"` : v).join(' '));
   const command = args.shift();
-  let env = Object.assign({}, process.env);
-  env.HOMEBREW_NO_AUTO_UPDATE = '1';
-  env.HOMEBREW_NO_INSTALL_CLEANUP = '1';
   // spawn is safer and more lightweight than exec
-  const ret = spawnSync(command, args, {stdio: 'inherit', env: env});
+  const ret = spawnSync(command, args, {stdio: 'inherit', env: cmdEnv});
   if (ret.status !== 0) {
     throw ret.error;
   }
@@ -19,6 +20,7 @@ function run() {
 
 function addToPath(newPath) {
   fs.appendFileSync(process.env.GITHUB_PATH, `${newPath}\n`);
+  cmdEnv.PATH += `${path.delimiter}${newPath}`;
 }
 
 function isMac() {
@@ -46,7 +48,6 @@ if (!/^[a-z0-9_-]+$/i.test(user)) {
 }
 const userExists = user == 'root';
 
-let bin;
 let cmdPrefix;
 
 function useTmpDir() {
@@ -58,15 +59,14 @@ if (isMac()) {
   // install
   run(`brew`, `install`, `--quiet`, `mysql@${mysqlVersion}`);
 
-  // start
-  const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
-  bin = `${prefix}/opt/mysql@${mysqlVersion}/bin`;
-  run(`${bin}/mysql.server`, `start`);
-
   // set path
-  addToPath(bin);
+  const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
+  addToPath(`${prefix}/opt/mysql@${mysqlVersion}/bin`);
 
-  cmdPrefix = [`${bin}/mysql`];
+  // start
+  run(`mysql.server`, `start`);
+
+  cmdPrefix = [`mysql`];
 } else if (isWindows()) {
   // install
   const install = mysqlVersion != '8.0';
@@ -83,15 +83,15 @@ if (isMac()) {
     fs.renameSync(`mysql-${fullVersion}-winx64`, `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}`);
   }
 
+  // set path
+  addToPath(`C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`);
+
   // start
-  bin = `C:\\Program Files\\MySQL\\MySQL Server ${mysqlVersion}\\bin`;
-  run(`${bin}\\mysqld`, `--initialize-insecure`);
-  run(`${bin}\\mysqld`, `--install`);
+  run(`mysqld`, `--initialize-insecure`);
+  run(`mysqld`, `--install`);
   run(`net`, `start`, `MySQL`);
 
-  addToPath(bin);
-
-  cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
+  cmdPrefix = [`mysql`, `-u`, `root`];
 } else {
   if (mysqlVersion != '8.0' || process.arch == 'arm64') {
     // install
@@ -112,7 +112,6 @@ if (isMac()) {
   // remove root password
   run(`sudo`, `mysqladmin`, `-proot`, `password`, ``);
 
-  bin = `/usr/bin`;
   cmdPrefix = [`sudo`, `mysql`];
 }
 
@@ -123,5 +122,5 @@ if (!userExists) {
 }
 
 if (database) {
-  run(path.join(bin, 'mysqladmin'), `-u`, user, `create`, database);
+  run('mysqladmin', `-u`, user, `create`, database);
 }
