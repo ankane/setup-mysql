@@ -23,6 +23,7 @@ function addToPath(newPath) {
   for (const k of Object.keys(cmdEnv)) {
     console.log(k);
   }
+  console.log(cmdEnv.Path);
   cmdEnv.PATH += `${path.delimiter}${newPath}`;
 }
 
