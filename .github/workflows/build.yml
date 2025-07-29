@@ -9,8 +9,8 @@ jobs:
         include:
           # - os: ubuntu-24.04
           #   mysql-version: 8.4
-          - os: ubuntu-24.04
-            mysql-version: 8.0
+          # - os: ubuntu-24.04
+          #   mysql-version: 8.0
           # - os: ubuntu-24.04-arm
           #   mysql-version: 8.4
           # - os: ubuntu-24.04-arm
@@ -25,8 +25,8 @@ jobs:
           #   mysql-version: 8.0
           # - os: macos-15
           #   mysql-version: 8.4
-          - os: macos-15
-            mysql-version: 8.0
+          # - os: macos-15
+          #   mysql-version: 8.0
           # - os: macos-14
           #   mysql-version: 8.4
           # - os: macos-14
@@ -35,8 +35,8 @@ jobs:
           #   mysql-version: 8.4
           # - os: macos-13
           #   mysql-version: 8.0
-          # - os: windows-2025
-          #   mysql-version: 8.4
+          - os: windows-2025
+            mysql-version: 8.4
           # - os: windows-2025
           #   mysql-version: 8.0
           # - os: windows-2022
