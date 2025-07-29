@@ -91,8 +91,6 @@ if (isMac()) {
 
   addToPath(bin);
 
-  run(`${bin}\\mysql`, `-u`, `root`, `-e`, `SELECT VERSION()`);
-
   cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
 } else {
   if (mysqlVersion != '8.0' || process.arch == 'arm64') {
