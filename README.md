@@ -16,6 +16,13 @@ Add it as a step to your workflow
       - uses: ankane/setup-mysql@v1
 ```
 
+The default credentials are:
+
+- user: `runner` on Linux, `root` on Mac, `ODBC` on Windows
+- password: none
+- host: `localhost` or socket
+- port: `3306`
+
 ## Versions
 
 Specify a version
