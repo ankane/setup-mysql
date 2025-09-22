@@ -52,7 +52,7 @@ jobs:
           - os: windows-2022
             mysql-version: 8.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./.
         with:
           mysql-version: ${{ matrix.mysql-version }}

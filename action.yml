@@ -7,5 +7,5 @@ inputs:
   user:
     description: User to create
 runs:
-  using: node20
+  using: node24
   main: index.js
