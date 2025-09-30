@@ -101,7 +101,6 @@ if (isMac()) {
     const selections = `mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts\n`;
     spawnSync(`sudo`, [`debconf-set-selections`], {input: selections});
     run(`sudo`, `dpkg`, `-i`, `mysql-apt-config.deb`);
-    // TODO only update single list
     run(`sudo`, `apt-get`, `-qq`, `update`);
     run(`sudo`, `apt-get`, `-qq`, `-o`, `Dpkg::Use-Pty=0`, `install`, `mysql-server`);
   }
