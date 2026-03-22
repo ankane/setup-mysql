@@ -97,7 +97,7 @@ if (isMac()) {
     // install
     useTmpDir();
     // https://dev.mysql.com/downloads/repo/apt/
-    run(`wget`, `-q`, `-O`, `mysql-apt-config.deb`, `https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb`);
+    run(`wget`, `-q`, `-O`, `mysql-apt-config.deb`, `https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb`);
     const selections = `mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts\n`;
     spawnSync(`sudo`, [`debconf-set-selections`], {input: selections});
     run(`sudo`, `dpkg`, `-i`, `mysql-apt-config.deb`);
