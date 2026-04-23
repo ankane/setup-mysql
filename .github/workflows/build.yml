@@ -8,47 +8,68 @@ jobs:
       matrix:
         include:
           - os: ubuntu-24.04
+            mysql-version: 9.7
+          - os: ubuntu-24.04
             mysql-version: 8.4
           - os: ubuntu-24.04
             mysql-version: 8.0
+
+          - os: ubuntu-24.04-arm
+            mysql-version: 9.7
           - os: ubuntu-24.04-arm
             mysql-version: 8.4
           - os: ubuntu-24.04-arm
             mysql-version: 8.0
+
+          - os: ubuntu-22.04
+            mysql-version: 9.7
           - os: ubuntu-22.04
             mysql-version: 8.4
           - os: ubuntu-22.04
             mysql-version: 8.0
+
+          - os: ubuntu-22.04-arm
+            mysql-version: 9.7
           - os: ubuntu-22.04-arm
             mysql-version: 8.4
           - os: ubuntu-22.04-arm
             mysql-version: 8.0
+
           - os: macos-26
             mysql-version: 8.4
           - os: macos-26
             mysql-version: 8.0
+
           - os: macos-15
             mysql-version: 8.4
           - os: macos-15
             mysql-version: 8.0
+
           - os: macos-15-intel
             mysql-version: 8.4
           - os: macos-15-intel
             mysql-version: 8.0
+
           - os: macos-14
             mysql-version: 8.4
           - os: macos-14
             mysql-version: 8.0
+
+          - os: windows-2025
+            mysql-version: 9.7
           - os: windows-2025
             mysql-version: 8.4
           - os: windows-2025
             mysql-version: 8.0
+
+          - os: windows-2022
+            mysql-version: 9.7
           - os: windows-2022
             mysql-version: 8.4
           - os: windows-2022
             mysql-version: 8.0
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.
         with:
           mysql-version: ${{ matrix.mysql-version }}

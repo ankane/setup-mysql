@@ -30,30 +30,30 @@ Specify a version
 ```yml
       - uses: ankane/setup-mysql@v1
         with:
-          mysql-version: 8.0
+          mysql-version: 8.4
 ```
 
 Currently supports
 
-Version | `8.4` | `8.0`
---- | --- | ---
-`ubuntu-24.04` | ✓ | default
-`ubuntu-24.04-arm` | ✓ | default
-`ubuntu-22.04` | ✓ | default
-`ubuntu-22.04-arm` | ✓ | default
-`macos-26` | ✓ | default
-`macos-15` | ✓ | default
-`macos-15-intel` | ✓ | default
-`macos-14` | ✓ | default
-`windows-2025` | ✓ | default
-`windows-2022` | ✓ | default
+Version | `9.0` | `8.4` | `8.0`
+--- | --- | --- | ---
+`ubuntu-24.04` | ✓ | ✓ | default
+`ubuntu-24.04-arm` | ✓ | ✓ | default
+`ubuntu-22.04` | ✓ | ✓ | default
+`ubuntu-22.04-arm` | ✓ | ✓ | default
+`macos-26` | | ✓ | default
+`macos-15` | | ✓ | default
+`macos-15-intel` | | ✓ | default
+`macos-14` | | ✓ | default
+`windows-2025` | ✓ | ✓ | default
+`windows-2022` | ✓ | ✓ | default
 
 Test against multiple versions
 
 ```yml
     strategy:
       matrix:
-        mysql-version: [8.4, 8.0]
+        mysql-version: [9.7, 8.4]
     steps:
       - uses: ankane/setup-mysql@v1
         with:

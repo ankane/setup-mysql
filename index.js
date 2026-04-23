@@ -34,7 +34,7 @@ const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
-if (!['8.4', '8.0'].includes(mysqlVersion)) {
+if (!['9.7', '8.4', '8.0'].includes(mysqlVersion)) {
   throw `MySQL version not supported: ${mysqlVersion}`;
 }
 
@@ -73,6 +73,7 @@ if (isMac()) {
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
+      '9.7': '9.7.0',
       '8.4': '8.4.6',
       '8.0': '8.0.43'
     };
@@ -94,10 +95,16 @@ if (isMac()) {
   cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
 } else {
   if (mysqlVersion != '8.0' || process.arch == 'arm64') {
+    if (process.arch != 'arm64') {
+      // clear previous data
+      run(`sudo`, `systemctl`, `stop`, `mysql`);
+      run(`sudo`, `rm`, `-rf`, `/var/lib/mysql`);
+    }
+
     // install
     useTmpDir();
     // https://dev.mysql.com/downloads/repo/apt/
-    run(`wget`, `-q`, `-O`, `mysql-apt-config.deb`, `https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb`);
+    run(`wget`, `-q`, `-O`, `mysql-apt-config.deb`, `https://dev.mysql.com/get/mysql-apt-config_0.8.39-1_all.deb`);
     const selections = `mysql-apt-config mysql-apt-config/select-server select mysql-${mysqlVersion}-lts\n`;
     spawnSync(`sudo`, [`debconf-set-selections`], {input: selections});
     run(`sudo`, `dpkg`, `-i`, `mysql-apt-config.deb`);
