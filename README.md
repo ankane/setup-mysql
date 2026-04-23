@@ -35,7 +35,7 @@ Specify a version
 
 Currently supports
 
-Version | `9.0` | `8.4` | `8.0`
+Version | `9.7` | `8.4` | `8.0`
 --- | --- | --- | ---
 `ubuntu-24.04` | ✓ | ✓ | default
 `ubuntu-24.04-arm` | ✓ | ✓ | default
