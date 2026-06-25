@@ -36,20 +36,28 @@ jobs:
             mysql-version: 8.0
 
           - os: macos-26
+            mysql-version: 9.7
+          - os: macos-26
             mysql-version: 8.4
           - os: macos-26
             mysql-version: 8.0
 
           - os: macos-15
+            mysql-version: 9.7
+          - os: macos-15
             mysql-version: 8.4
           - os: macos-15
             mysql-version: 8.0
 
           - os: macos-15-intel
+            mysql-version: 9.7
+          - os: macos-15-intel
             mysql-version: 8.4
           - os: macos-15-intel
             mysql-version: 8.0
 
+          - os: macos-14
+            mysql-version: 9.7
           - os: macos-14
             mysql-version: 8.4
           - os: macos-14

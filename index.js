@@ -29,6 +29,12 @@ function isWindows() {
   return process.platform == 'win32';
 }
 
+function formulaPresent(formula) {
+  const tapPrefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local/Homebrew';
+  const tap = `${tapPrefix}/Library/Taps/homebrew/homebrew-core`;
+  return fs.existsSync(`${tap}/Formula/${formula[0]}/${formula}.rb`) || fs.existsSync(`${tap}/Aliases/${formula}`);
+}
+
 const image = process.env['ImageOS'];
 const defaultVersion = '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
@@ -55,12 +61,17 @@ function useTmpDir() {
 }
 
 if (isMac()) {
+  const formula = `mysql@${mysqlVersion}`;
+  if (!formulaPresent(formula)) {
+    run(`brew`, `update`, `--quiet`);
+  }
+
   // install
-  run(`brew`, `install`, `--quiet`, `mysql@${mysqlVersion}`);
+  run(`brew`, `install`, `--quiet`, formula);
 
   // start
   const prefix = process.arch == 'arm64' ? '/opt/homebrew' : '/usr/local';
-  bin = `${prefix}/opt/mysql@${mysqlVersion}/bin`;
+  bin = `${prefix}/opt/${formula}/bin`;
   run(`${bin}/mysql.server`, `start`);
 
   // set path
