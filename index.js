@@ -35,8 +35,18 @@ function formulaPresent(formula) {
   return fs.existsSync(`${tap}/Formula/${formula[0]}/${formula}.rb`) || fs.existsSync(`${tap}/Aliases/${formula}`);
 }
 
-const image = process.env['ImageOS'];
-const defaultVersion = (image == 'ubuntu26' || image == 'ubuntu26-arm64') ? '8.4' : '8.0';
+function getDefaultVersion() {
+  const image = process.env['ImageOS'];
+  if (isMac()) {
+    return '9.7';
+  } else if (image == 'ubuntu26' || image == 'ubuntu26-arm64') {
+    return '8.4';
+  } else {
+    return '8.0';
+  }
+}
+
+const defaultVersion = getDefaultVersion();
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
@@ -105,6 +115,7 @@ if (isMac()) {
 
   cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
 } else {
+  const image = process.env['ImageOS'];
   if (mysqlVersion != defaultVersion || (process.arch == 'arm64' && image != 'ubuntu26-arm64')) {
     if (process.arch != 'arm64' || image == 'ubuntu26-arm64') {
       // clear previous data
