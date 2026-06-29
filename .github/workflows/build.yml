@@ -7,6 +7,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: ubuntu-26.04
+            mysql-version: 8.4
+
+          - os: ubuntu-26.04-arm
+            mysql-version: 8.4
+
           - os: ubuntu-24.04
             mysql-version: 9.7
           - os: ubuntu-24.04

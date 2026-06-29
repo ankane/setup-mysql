@@ -36,7 +36,7 @@ function formulaPresent(formula) {
 }
 
 const image = process.env['ImageOS'];
-const defaultVersion = '8.0';
+const defaultVersion = (image == 'ubuntu26' || image == 'ubuntu26-arm64') ? '8.4' : '8.0';
 const mysqlVersion = parseFloat(process.env['INPUT_MYSQL-VERSION'] || defaultVersion).toFixed(1);
 
 // TODO make OS-specific
@@ -105,8 +105,8 @@ if (isMac()) {
 
   cmdPrefix = [`${bin}\\mysql`, `-u`, `root`];
 } else {
-  if (mysqlVersion != '8.0' || process.arch == 'arm64') {
-    if (process.arch != 'arm64') {
+  if (mysqlVersion != defaultVersion || (process.arch == 'arm64' && image != 'ubuntu26-arm64')) {
+    if (process.arch != 'arm64' || image == 'ubuntu26-arm64') {
       // clear previous data
       run(`sudo`, `systemctl`, `stop`, `mysql`);
       run(`sudo`, `rm`, `-rf`, `/var/lib/mysql`);
