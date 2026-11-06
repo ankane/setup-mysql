@@ -86,4 +86,4 @@ jobs:
       - run: mysqladmin create testdb2 ${{ matrix.mysql-version == 8.0 && '-u testuser' || '' }}
       - run: mysql -D testdb -e 'SELECT DATABASE()' ${{ matrix.mysql-version == 8.0 && '-u testuser' || '' }}
       - if: ${{ runner.os != 'Windows' }}
-        run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
+        run: mysql_tzinfo_to_sql /usr/share/zoneinfo | sudo mysql -u root mysql
