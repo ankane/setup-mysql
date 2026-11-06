@@ -85,5 +85,5 @@ jobs:
       - run: mysql -e "SHOW VARIABLES LIKE 'socket'" ${{ matrix.mysql-version == 8.0 && '-u testuser' || '' }}
       - run: mysqladmin create testdb2 ${{ matrix.mysql-version == 8.0 && '-u testuser' || '' }}
       - run: mysql -D testdb -e 'SELECT DATABASE()' ${{ matrix.mysql-version == 8.0 && '-u testuser' || '' }}
-      - if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+      - if: ${{ runner.os != 'Windows' }}
         run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
