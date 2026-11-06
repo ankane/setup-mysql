@@ -87,7 +87,7 @@ Run queries
       - run: mysql -D testdb -e 'SELECT VERSION()'
 ```
 
-Install [time zone support](https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html)
+Install [time zone support](https://dev.mysql.com/doc/refman/9.7/en/time-zone-support.html)
 
 ```yml
       - run: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
