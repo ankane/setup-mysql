@@ -90,7 +90,7 @@ if (isMac()) {
   cmdPrefix = [`${bin}/mysql`];
 } else if (isWindows()) {
   // install
-  const install = mysqlVersion != '8.0';
+  const install = mysqlVersion != '8.4';
   if (install) {
     // https://dev.mysql.com/downloads/mysql/
     const versionMap = {
